@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import logging
 import hashlib
+import logging
 from datetime import datetime
 
-from scoring import get_score, get_interests
-
-from fields import Field, CharField, ArgumentsField, EmailField, PhoneField, DateField, BirthDayField, GenderField, ClientIDsField
 from constants import *
+from fields import Field, CharField, ArgumentsField, EmailField, PhoneField, DateField, BirthDayField, GenderField, \
+    ClientIDsField
+from scoring import get_score, get_interests
 
 
 class RequestMeta(type):

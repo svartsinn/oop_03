@@ -1,9 +1,9 @@
+import functools
+import logging
 from time import sleep
 
 import redis
 from redis import ConnectionError, TimeoutError
-import functools
-import logging
 
 MAX_RECONNECT_TRIES = 2
 RECONNECT_TIMEOUT_RATE = 2

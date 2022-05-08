@@ -1,6 +1,5 @@
 import hashlib
 import json
-from datetime import datetime
 
 
 def get_score(store, phone, email, birthday=None, gender=None, first_name=None, last_name=None):

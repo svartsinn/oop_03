@@ -1,15 +1,14 @@
 import json
 import logging
 import uuid
-
-from api import method_handler
-import redis.exceptions
-
-from constants import *
-from store import RedisStore, RedisCache
+from http.server import HTTPServer, BaseHTTPRequestHandler
 from optparse import OptionParser
 
-from http.server import HTTPServer, BaseHTTPRequestHandler
+import redis.exceptions
+
+from api import method_handler
+from constants import *
+from store import RedisStore, RedisCache
 
 
 class MainHTTPHandler(BaseHTTPRequestHandler):

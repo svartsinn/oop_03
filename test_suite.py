@@ -1,8 +1,7 @@
-import hashlib
 import datetime
 import functools
+import hashlib
 import unittest
-from collections import defaultdict
 
 from pip._vendor.pyparsing import basestring
 
