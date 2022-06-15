@@ -20,33 +20,11 @@ def cases(cases):
     return decorator
 
 
-class MockCache:
-    _has_connect = True
-
-    def __init__(self):
-        self._cache = {}
-
-    def get(self, key):
-        if not self._has_connect:
-            raise ConnectionError('Can\'t connect to Store')
-        return self._cache.get(key)
-
-    def set(self, key, value, time=None):
-        if not self._has_connect:
-            raise ConnectionError('Can\'t connect to Store')
-        self._cache.update({key: value})
-        return self
-
-    def disable_connection(self):
-        self._has_connect = False
-        return self
-
-
 class TestSuite(unittest.TestCase):
     def setUp(self):
         self.context = {}
         self.headers = {}
-        self.store = RedisStore(MockCache())
+        self.store = RedisStore()
 
     def get_response(self, request):
         return api.method_handler({"body": request, "headers": self.headers}, self.context, self.store)
@@ -118,7 +96,9 @@ class TestSuite(unittest.TestCase):
     def test_ok_score_request(self, arguments):
         request = {"account": "horns&hoofs", "login": "h&f", "method": "online_score", "arguments": arguments}
         self.set_valid_auth(request)
-        code, response = self.get_response(request)
+        response, code = self.get_response(request)
+        print(response)
+        print(arguments)
         self.assertEqual(api.OK, code, arguments)
         score = response.get("score")
         self.assertTrue(isinstance(score, (int, float)) and score >= 0, arguments)
@@ -259,19 +239,14 @@ class FieldTests(unittest.TestCase):
 
 class StoreTestSuite(unittest.TestCase):
     def test_available_store(self):
-        store = RedisStore(MockCache())
+        store = RedisStore()
         store.set('key', 'test')
         store.set('another_key', 'another_test')
         self.assertEqual(store.get('key'), 'test')
         self.assertEqual(store.get('another_key'), 'another_test')
 
-    def test_unavailable_store(self):
-        store = RedisStore(MockCache().disable_connection())
-        with self.assertRaises(ConnectionError):
-            store.set('key', 'test')
-
     def test_available_cache(self):
-        store = RedisStore(MockCache())
+        store = RedisStore()
         store.cache_set('key', 'test')
         store.cache_set('another_key', 'another_test')
         self.assertEqual(store.cache_get('key'), 'test')

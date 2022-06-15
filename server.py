@@ -8,14 +8,14 @@ import redis.exceptions
 
 from api import method_handler
 from constants import *
-from store import RedisStore, RedisCache
+from store import RedisStore
 
 
 class MainHTTPHandler(BaseHTTPRequestHandler):
     router = {
         "method": method_handler,
     }
-    store = RedisStore(RedisCache())
+    store = RedisStore()
 
     def get_request_id(self, headers):
         return headers.get('HTTP_X_REQUEST_ID', uuid.uuid4().hex)

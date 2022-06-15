@@ -63,10 +63,13 @@ class EmailField(CharField):
             raise ValueError('invalid value format')
 
 
-class PhoneField(Field):
+class PhoneField(CharField):
     def validate(self, value):
         logging.debug('Validating phone number')
+        if not value:
+            return
         value = str(value)
+        super().validate(value)
         if len(value) != 11:
             raise ValueError('Phone number not contain 11 symbols')
         elif not value.isdigit():
