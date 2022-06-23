@@ -5,8 +5,8 @@ import logging
 from datetime import datetime
 
 from constants import *
-from fields import Field, CharField, ArgumentsField, EmailField, PhoneField, DateField, BirthDayField, GenderField, \
-    ClientIDsField
+from fields import Field, CharField, ArgumentsField, EmailField, PhoneField, DateField, \
+    BirthDayField, GenderField, ClientIDsField
 from scoring import get_score, get_interests
 
 
@@ -24,12 +24,13 @@ class RequestMeta(type):
 
 class Request(metaclass=RequestMeta):
 
-    def __init__(self, request_params):
+    def __init__(self, request_params, validation=True):
         self.errors = []
         for name, field in self.fields.items():
             value = request_params[name] if name in request_params else None
             try:
-                field.validate(value)
+                if validation:
+                    field.validate(value)
                 setattr(self, name, value)
             except ValueError as e:
                 self.errors.append(f'field "{name}": {str(e)}')
@@ -92,9 +93,11 @@ class MethodRequest(Request):
 
 def check_auth(request: MethodRequest):
     if request.is_admin:
-        digest = hashlib.sha512((datetime.now().strftime("%Y%m%d%H") + ADMIN_SALT).encode("utf-8")).hexdigest()
+        digest = hashlib.sha512((datetime.now().strftime("%Y%m%d%H") + ADMIN_SALT).
+                                encode("utf-8")).hexdigest()
     else:
-        digest = hashlib.sha512((request.account + request.login + SALT).encode("utf-8")).hexdigest()
+        digest = hashlib.sha512((request.account + request.login + SALT).
+                                encode("utf-8")).hexdigest()
     logging.info(f'Hash for {request.login} is {digest}')
     if digest == request.token:
         return True
@@ -135,7 +138,8 @@ def get_online_score(method_request, ctx, store):
         return request.errors, INVALID_REQUEST
     ctx['has'] = request.get_not_empty_fields()
 
-    score = get_score(store, request.phone, request.email, request.birthday, request.gender, request.first_name, request.last_name)
+    score = get_score(store, request.phone, request.email, request.birthday, request.gender,
+                      request.first_name, request.last_name)
     return {'score': score}, OK
 
 

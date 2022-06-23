@@ -20,7 +20,7 @@ python server.py
 
 Сервер поднимется на порту 8080, куда можно отправлять запросы. 
 
-Тесты запускаются командой `python test_suite.py`.
+Тесты запускаются командой `python -m unittest test_suite.py` или `pytest test_suite.py`.
 
 #### Методы:
 
