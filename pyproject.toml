@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "oop_03"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+redis = "4.2.2"
+six = "1.16.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "7.0.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
