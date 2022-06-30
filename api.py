@@ -26,16 +26,18 @@ class Request(metaclass=RequestMeta):
 
     def __init__(self, request_params, validation=True):
         self.errors = []
+        self.params = request_params
+        if validation:
+            self.is_valid()
+
+    def is_valid(self):
         for name, field in self.fields.items():
-            value = request_params[name] if name in request_params else None
+            value = self.params[name] if name in self.params else None
             try:
-                if validation:
-                    field.validate(value)
+                field.validate(value)
                 setattr(self, name, value)
             except ValueError as e:
                 self.errors.append(f'field "{name}": {str(e)}')
-
-    def is_valid(self):
         return not self.errors
 
 
@@ -132,7 +134,7 @@ def process_scoring(method_request, ctx, store):
 
 def get_online_score(method_request, ctx, store):
     if method_request.is_admin:
-        return  {'score': int(ADMIN_SALT)}, OK
+        return {'score': int(ADMIN_SALT)}, OK
     request = OnlineScoreRequest(method_request.arguments)
     if not request.is_valid():
         return request.errors, INVALID_REQUEST

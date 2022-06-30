@@ -38,14 +38,14 @@ class CharField(Field):
 class ListField(Field):
     def validate(self, value):
         logging.debug('validating list')
-        if not (type(value) == list):
+        if not isinstance(value, list):
             raise ValidationError('List Field got non-list type')
 
 
 class DictField(Field):
     def validate(self, value):
         logging.debug('List validating')
-        if not (type(value) == dict):
+        if not isinstance(value, dict):
             raise ValidationError('Dict field got non-dict type')
 
 
